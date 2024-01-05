@@ -10,5 +10,11 @@ sudo apt-get upgrade -y
 #
 #sudo apt-get install -y docker-ce docker-ce-cli containerd.io 
 # k3s init
-export INSTALL_K3S_EXEC="agent --server https://192.168.56.110:6443 --token-file /vagrant/node-token --node-ip 192.168.56.111"
-curl -sfL https://get.k3s.io | sh - 
+#sudo ufw disable
+#export INSTALL_K3S_EXEC="agent --server https://192.168.56.110:6443 --token-file /vagrant/node-token --node-ip 192.168.56.111"
+
+#curl -sfL https://get.k3s.io | sh - 
+#mkdir -p ${HOME}/.kube
+#cp /vagrant/k3s.yaml .kube/config
+#chmod 600 ~/.kube/config
+#export KUBECONFIG=~/.kube/config
