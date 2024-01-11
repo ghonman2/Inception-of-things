@@ -47,13 +47,12 @@ echo "For get argoCD admin Password ENTER : "
 echo "kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d"
 echo "kubectl port-forward --address=0.0.0.0 svc/argocd-server -n argocd 8080:443 2>&1 & "
 
-rm get_helm 
+rm get_helm.sh
 rm kubectl.sha256 
 
 
-kubectl apply -f /vagrant/secret.yml
-kubectl apply -f /vagrant/app.yml
-
+kubectl apply -f /vagrant/secret.yml /vagrant/app.yml
+kubectl wait --for=condition=Ready pods --all -n dev
 
 
 # k3s init
