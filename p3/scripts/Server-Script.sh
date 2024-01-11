@@ -16,30 +16,43 @@ sudo chmod 666 /var/run/docker.sock
 
 
 # k3d install
-#curl -s https://raw.githubusercontent.com/k3d-io/k3d/main/install.sh | bash
+curl -s https://raw.githubusercontent.com/k3d-io/k3d/main/install.sh | bash
 
 # k3d cluster  create
-#k3d cluster create joowparkNode --agents 3 --wait
+k3d cluster create joowparkNode --agents 3 --wait
 
 #kubectl install
-#curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
-#curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl.sha256"
-#echo "$(cat kubectl.sha256)  kubectl" | sha256sum --check
-#chmod +x kubectl
-#mv ./kubectl /usr/local/bin
-#
-## generate namespace
-#kubectl create namespace argocd
-#kubectl create namespace dev
-#
-##argoCD intall
-#kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
-#kubectl wait --for=condition=Ready pods --all -n argocd
+curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl.sha256"
+echo "$(cat kubectl.sha256)  kubectl" | sha256sum --check
+chmod +x kubectl
+sudo mv ./kubectl /usr/local/bin
+export KUBECONFIG=$(k3d kubeconfig write joowparkNode)
 
+
+#helm-chart install 
+curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
+chmod 700 get_helm.sh
+./get_helm.sh
+
+## generate namespace
+kubectl create namespace argocd
+kubectl create namespace dev
+
+##argoCD intall
+kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+kubectl wait --for=condition=Ready pods --all -n argocd
 
 echo "For get argoCD admin Password ENTER : "
 echo "kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d"
 echo "kubectl port-forward --address=0.0.0.0 svc/argocd-server -n argocd 8080:443 2>&1 & "
+
+rm get_helm 
+rm kubectl.sha256 
+
+
+kubectl apply -f /vagrant/secret.yml
+kubectl apply -f /vagrant/app.yml
 
 
 
