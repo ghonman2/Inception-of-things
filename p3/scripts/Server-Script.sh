@@ -51,7 +51,10 @@ rm get_helm.sh
 rm kubectl.sha256 
 
 
-kubectl apply -f /vagrant/secret.yml /vagrant/app.yml
+echo "export KUBECONFIG=$(k3d kubeconfig write joowparkNode)" >> /home/vagrant/.bashrc
+source /home/vagrant/.bashrc
+
+kubectl apply -f /vagrant
 kubectl wait --for=condition=Ready pods --all -n dev
 
 
@@ -60,7 +63,6 @@ kubectl wait --for=condition=Ready pods --all -n dev
 #sudo ufw disable
 #export INSTALL_K3S_EXEC="--write-kubeconfig-mode=644 --tls-san $(hostname) --node-ip 192.168.56.110 --bind-address 192.168.56.110  --advertise-address 192.168.56.110"
 #curl -sfL https://get.k3s.io | sh -
-
 #sudo chmod 644 /etc/rancher/k3s/k3s.yaml
 #cp /etc/rancher/k3s/k3s.yaml /vagrant
 #cp /var/lib/rancher/k3s/server/node-token /vagrant/
