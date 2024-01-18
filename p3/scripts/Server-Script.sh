@@ -14,12 +14,11 @@ sudo apt-get install docker-ce docker-ce-cli containerd.io -y
 sudo chmod 666 /var/run/docker.sock
 #sudo usermod -aG docker $USER
 
-
 # k3d install
 curl -s https://raw.githubusercontent.com/k3d-io/k3d/main/install.sh | bash
 
 # k3d cluster  create
-k3d cluster create joowparkNode --agents 2 --wait
+k3d cluster create joowparkNode --agents 1 -p "8081:80@loadbalancer" --wait
 
 #kubectl install
 curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
